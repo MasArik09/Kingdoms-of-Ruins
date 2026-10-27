@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { useInventoryStore } from '../stores/inventoryStore';
 import { ItemRegistry } from '../config/itemRegistry';
 import { ItemCategory, ItemDefinition } from '../types/item';
-import { EquipmentRegistry, RarityColors } from '../config/equipmentRegistry';
+import { EquipmentRegistry, RarityColors, StatModifiers } from '../config/equipmentRegistry';
 import { useCharacterStore } from '../stores/characterStore';
 import { CharacterPanelUI } from './CharacterPanelUI';
 
@@ -351,15 +351,13 @@ export class InventoryUI extends Phaser.GameObjects.Container {
         borderThick = 2.0;
         borderAlpha = 1.0;
       } else if (isItem && def) {
-        const eqDef = EquipmentRegistry[def.id];
-        if (eqDef) {
-          borderCol = RarityColors[eqDef.rarity].border;
-          borderThick = 1.8;
-          borderAlpha = 0.85;
-        } else {
-          borderAlpha = 0.6;
-        }
+        const rarity = def.rarity || 'common';
+        const colorInfo = RarityColors[rarity] || RarityColors.common;
+        borderCol = colorInfo.border;
+        borderThick = 1.8;
+        borderAlpha = 0.85;
       }
+
 
       bg.lineStyle(borderThick, borderCol, borderAlpha);
       bg.strokeRoundedRect(0, 0, slotSize, slotSize, 4);
@@ -443,20 +441,63 @@ export class InventoryUI extends Phaser.GameObjects.Container {
     const eqDef = EquipmentRegistry[def.id];
     this.cleanupEquipZone();
 
+    const rarityInfo = RarityColors[def.rarity] || RarityColors.common;
+    this.detailTitleText.setText(def.name.toUpperCase());
+    this.detailTitleText.setStyle({ color: rarityInfo.hexString });
+
     if (eqDef) {
-      const rarityInfo = RarityColors[eqDef.rarity];
-      this.detailTitleText.setText(def.name.toUpperCase());
-      this.detailTitleText.setStyle({ color: rarityInfo.hexString });
       this.detailCategoryText.setText(`${rarityInfo.text.toUpperCase()} ${eqDef.slot.toUpperCase()}`);
 
-      let statsStr = '';
+      // Basic stats display
+      let statsStr = 'STATS:';
       Object.entries(eqDef.stats).forEach(([statKey, val]) => {
-        if (val && val > 0) {
-          statsStr += `+${val} ${statKey.toUpperCase()}   `;
+        if (val) {
+          const label = statKey === 'attackPower' ? 'Attack' : (statKey === 'armor' ? 'Defense' : statKey.toUpperCase());
+          statsStr += `\n• ${label}: +${val}`;
         }
       });
-      this.detailDescText.setText(`${def.description}\n\n${statsStr}`);
 
+      // Comparison display
+      const characterStore = useCharacterStore.getState();
+      const equippedItemId = characterStore.equipment[eqDef.slot];
+      let comparisonStr = '';
+      
+      if (equippedItemId && equippedItemId !== def.id) {
+        const equippedEqDef = EquipmentRegistry[equippedItemId];
+        if (equippedEqDef) {
+          comparisonStr = '\n\nCOMPARISON:';
+          const allStats: string[] = ['health', 'stamina', 'strength', 'defense', 'agility', 'attackPower', 'armor'];
+          let diffCount = 0;
+          
+          allStats.forEach((statKey) => {
+            const sKey = statKey as keyof StatModifiers;
+            const newStatVal = eqDef.stats[sKey] || 0;
+            const oldStatVal = equippedEqDef.stats[sKey] || 0;
+            
+            if (newStatVal !== 0 || oldStatVal !== 0) {
+              const diff = newStatVal - oldStatVal;
+              const label = statKey === 'attackPower' ? 'Attack' : (statKey === 'armor' ? 'Defense' : statKey.charAt(0).toUpperCase() + statKey.slice(1));
+              const sign = diff >= 0 ? '+' : '';
+              comparisonStr += `\n${sign}${diff} ${label}`;
+              diffCount++;
+            }
+          });
+          if (diffCount === 0) {
+            comparisonStr = '';
+          }
+        }
+      } else if (!equippedItemId) {
+        // Show as positive increases since slot is empty
+        comparisonStr = '\n\nCOMPARISON:';
+        Object.entries(eqDef.stats).forEach(([statKey, val]) => {
+          if (val) {
+            const label = statKey === 'attackPower' ? 'Attack' : (statKey === 'armor' ? 'Defense' : statKey.charAt(0).toUpperCase() + statKey.slice(1));
+            comparisonStr += `\n+${val} ${label}`;
+          }
+        });
+      }
+
+      this.detailDescText.setText(`${def.description}\n\n${statsStr}${comparisonStr}\n\nMax Stack: ${def.maxStack}`);
       this.equipBtnContainer.setVisible(true);
 
       const w = 160;
@@ -487,10 +528,8 @@ export class InventoryUI extends Phaser.GameObjects.Container {
         });
       });
     } else {
-      this.detailTitleText.setText(def.name.toUpperCase());
-      this.detailTitleText.setStyle({ color: '#f59e0b' });
-      this.detailCategoryText.setText(def.category.toUpperCase());
-      this.detailDescText.setText(def.description);
+      this.detailCategoryText.setText(`${rarityInfo.text.toUpperCase()} ${def.category.toUpperCase()}`);
+      this.detailDescText.setText(`${def.description}\n\nMax Stack: ${def.maxStack}`);
       this.equipBtnContainer.setVisible(false);
     }
   }

@@ -1,12 +1,14 @@
 export type ItemCategory = 'resource' | 'weapon' | 'armor' | 'consumable' | 'quest';
+export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface ItemDefinition {
   id: string;
   name: string;
   description: string;
   category: ItemCategory;
-  icon: string;
+  rarity: ItemRarity;
   maxStack: number;
+  icon: string;
 }
 
 export interface InventoryItem {
@@ -16,3 +18,4 @@ export interface InventoryItem {
   itemId: string;
   quantity: number;
 }
+

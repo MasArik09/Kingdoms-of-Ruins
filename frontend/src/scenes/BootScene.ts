@@ -725,6 +725,75 @@ export class BootScene extends Phaser.Scene {
     woodIconGraphics.fillEllipse(16, 32, 6, 16);
     woodIconGraphics.generateTexture('item-wood', 64, 64);
 
+    // 17a. Stone Item Icon (64x64)
+    const stoneIconGraphics = this.make.graphics();
+    stoneIconGraphics.fillStyle(0x1e293b, 1); // Outline
+    stoneIconGraphics.fillRoundedRect(16, 16, 32, 32, 6);
+    stoneIconGraphics.fillStyle(0x64748b, 1); // Main body
+    stoneIconGraphics.fillRoundedRect(18, 18, 28, 28, 4);
+    // Draw some crystal/facet details
+    stoneIconGraphics.fillStyle(0x94a3b8, 1); // Highlights
+    stoneIconGraphics.fillTriangle(20, 20, 32, 20, 20, 32);
+    stoneIconGraphics.fillStyle(0x475569, 1); // Shadows
+    stoneIconGraphics.fillTriangle(44, 44, 32, 44, 44, 32);
+    stoneIconGraphics.generateTexture('item-stone', 64, 64);
+
+    // 17b. Cloth Item Icon (64x64)
+    const clothIconGraphics = this.make.graphics();
+    clothIconGraphics.fillStyle(0x334155, 1); // Outline
+    clothIconGraphics.fillRoundedRect(14, 18, 36, 28, 6);
+    clothIconGraphics.fillStyle(0xe2e8f0, 1); // Main bundle body
+    clothIconGraphics.fillRoundedRect(16, 20, 32, 24, 4);
+    // Draw wrapped lines/folds
+    clothIconGraphics.fillStyle(0x94a3b8, 1);
+    clothIconGraphics.fillRect(24, 20, 4, 24);
+    clothIconGraphics.fillRect(36, 20, 4, 24);
+    clothIconGraphics.fillStyle(0x475569, 1); // Tie string
+    clothIconGraphics.fillRect(16, 30, 32, 4);
+    clothIconGraphics.generateTexture('item-cloth', 64, 64);
+
+    // 17c. Iron Sword Item Icon (64x64)
+    const ironSwordGraphics = this.make.graphics();
+    // Blade Outline
+    ironSwordGraphics.fillStyle(0x0f172a, 1);
+    ironSwordGraphics.fillRect(29, 10, 6, 36);
+    // Crossguard Outline
+    ironSwordGraphics.fillRect(20, 42, 24, 6);
+    // Hilt Outline
+    ironSwordGraphics.fillRect(29, 46, 6, 12);
+    // Blade
+    ironSwordGraphics.fillStyle(0xe2e8f0, 1); // Clean steel
+    ironSwordGraphics.fillRect(31, 11, 2, 34);
+    ironSwordGraphics.fillStyle(0x94a3b8, 1); // Shaded side
+    ironSwordGraphics.fillRect(33, 11, 1, 34);
+    // Crossguard
+    ironSwordGraphics.fillStyle(0xd97706, 1); // Golden pommel/crossguard
+    ironSwordGraphics.fillRect(21, 43, 22, 4);
+    // Hilt/Grip
+    ironSwordGraphics.fillStyle(0x78350f, 1); // Leather grip
+    ironSwordGraphics.fillRect(30, 47, 4, 10);
+    ironSwordGraphics.generateTexture('item-iron-sword', 64, 64);
+
+    // 17d. Static Rarity Glows (64x64)
+    const rarities = [
+      { key: 'common', color: 0x94a3b8 },
+      { key: 'uncommon', color: 0x22c55e },
+      { key: 'rare', color: 0x3b82f6 },
+      { key: 'epic', color: 0xa855f7 },
+      { key: 'legendary', color: 0xf97316 }
+    ];
+    rarities.forEach((r) => {
+      const glow = this.make.graphics();
+      // Draw nested circles for a smooth radial blur effect
+      glow.fillStyle(r.color, 0.08);
+      glow.fillCircle(32, 32, 28);
+      glow.fillStyle(r.color, 0.18);
+      glow.fillCircle(32, 32, 18);
+      glow.fillStyle(r.color, 0.38);
+      glow.fillCircle(32, 32, 8);
+      glow.generateTexture(`glow-${r.key}`, 64, 64);
+    });
+
     // 18. Closed Chest (64x64)
     const chestClosed = this.make.graphics();
     chestClosed.fillStyle(0x0a0705, 1); // Outline

@@ -18,6 +18,8 @@ import { EnemyBase } from '../entities/EnemyBase';
 import { CombatSystem } from '../systems/CombatSystem';
 import { DamageSystem } from '../systems/DamageSystem';
 import { ExperienceSystem } from '../systems/ExperienceSystem';
+import { LootSystem } from '../systems/LootSystem';
+
 
 export class WorldScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
@@ -33,6 +35,8 @@ export class WorldScene extends Phaser.Scene {
   private paperDoll!: PaperDoll;
   private enemies!: Phaser.Physics.Arcade.Group;
   private combatSystem!: CombatSystem;
+  private lootSystem!: LootSystem;
+
 
   private tabKey!: Phaser.Input.Keyboard.Key;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -265,6 +269,8 @@ export class WorldScene extends Phaser.Scene {
       return this.inventoryUI.getIsOpen() || this.characterPanelUI.getIsOpen();
     });
     new ExperienceSystem(this, this.player);
+    this.lootSystem = new LootSystem(this, this.player);
+
 
     // Slime Respawn System — 12 spawn points, 6 active at a time, 35s respawn cycle
     const slimeSpawnPoints = [
@@ -466,6 +472,8 @@ export class WorldScene extends Phaser.Scene {
       if (this.characterPanelUI) this.characterPanelUI.destroy();
       if (this.hudManager) this.hudManager.destroy();
       if (this.paperDoll) this.paperDoll.destroy();
+      if (this.lootSystem) this.lootSystem.destroy();
+
     });
 
     // Camera fade-in
@@ -482,6 +490,10 @@ export class WorldScene extends Phaser.Scene {
     if (this.combatSystem) {
       this.combatSystem.update();
     }
+    if (this.lootSystem) {
+      this.lootSystem.update();
+    }
+
 
     // Update player floating health bar (fade in/out logic)
     DamageSystem.updatePlayerHealthBar(this, this.player);

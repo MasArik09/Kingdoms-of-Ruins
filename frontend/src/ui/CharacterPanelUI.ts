@@ -405,18 +405,18 @@ export class CharacterPanelUI extends Phaser.GameObjects.Container {
     yOffset += 16;
 
     const derivedStatsList = [
-      { key: 'Max Health', val: derived.maxHealth },
-      { key: 'Max Stamina', val: derived.maxStamina },
-      { key: 'Attack Power', val: derived.attackPower },
-      { key: 'Armor Rating', val: derived.armorRating },
-      { key: 'Move Speed', val: Math.round(derived.moveSpeed) },
+      { key: 'HP', val: `${Math.round(store.currentHp)} / ${derived.maxHealth}` },
+      { key: 'Stamina', val: `${Math.round(store.currentStamina)} / ${derived.maxStamina}` },
+      { key: 'Attack Power', val: `${derived.attackPower}` },
+      { key: 'Armor Rating', val: `${derived.armorRating}` },
+      { key: 'Move Speed', val: `${Math.round(derived.moveSpeed)}` },
     ];
 
     derivedStatsList.forEach((stat) => {
       const nameTxt = this.scene.add.text(0, yOffset, stat.key, textStyleName);
       this.statsContainer.add(nameTxt);
 
-      const valTxt = this.scene.add.text(100, yOffset, `${stat.val}`, textStyleVal);
+      const valTxt = this.scene.add.text(100, yOffset, stat.val, textStyleVal);
       this.statsContainer.add(valTxt);
       yOffset += 14;
     });

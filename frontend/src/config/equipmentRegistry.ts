@@ -1,4 +1,5 @@
 import { EquipmentSlot } from '../types/equipment';
+import { ItemRarity } from '../types/item';
 
 export interface StatModifiers {
   health?: number;
@@ -9,8 +10,6 @@ export interface StatModifiers {
   attackPower?: number;
   armor?: number;
 }
-
-export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface EquipmentDefinition {
   itemId: string;
@@ -25,6 +24,12 @@ export const EquipmentRegistry: Record<string, EquipmentDefinition> = {
     slot: 'weapon',
     rarity: 'common',
     stats: { strength: 3, attackPower: 8 }
+  },
+  iron_sword: {
+    itemId: 'iron_sword',
+    slot: 'weapon',
+    rarity: 'rare',
+    stats: { strength: 5, attackPower: 15 }
   },
   traveler_hood: {
     itemId: 'traveler_hood',
@@ -47,7 +52,7 @@ export const EquipmentRegistry: Record<string, EquipmentDefinition> = {
   leather_armor: {
     itemId: 'leather_armor',
     slot: 'chest',
-    rarity: 'common',
+    rarity: 'uncommon',
     stats: { defense: 3, health: 10 }
   }
 };
@@ -59,3 +64,4 @@ export const RarityColors: Record<ItemRarity, { border: number; hexString: strin
   epic: { border: 0xa855f7, hexString: '#a855f7', text: 'Epic' },
   legendary: { border: 0xf97316, hexString: '#f97316', text: 'Legendary' }
 };
+
