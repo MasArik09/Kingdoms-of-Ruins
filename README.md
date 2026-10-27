@@ -40,16 +40,18 @@ Proyek ini dibangun menggunakan arsitektur modern multi-module yang memisahkan s
 
 ## 🐳 Cara Menjalankan Menggunakan Docker (Rekomendasi)
 
-Cukup pastikan **Docker Desktop** sudah berjalan, lalu jalankan perintah berikut di root folder:
+Cukup pastikan **Docker Desktop** sudah berjalan, lalu di terminal root folder cukup ketik:
 
 ```bash
-docker compose up --build
+docker compose up -d
 ```
 
+*(Jika Anda baru saja mengubah kode sumber backend/frontend dan ingin build ulang, tambahkan flag `--build`: `docker compose up -d --build`)*
+
 Layanan yang otomatis berjalan:
-* **Frontend**: Buka browser di [http://localhost:5173](http://localhost:5173) atau [http://localhost](http://localhost)
-* **Backend API**: Berjalan di [http://localhost:8080](http://localhost:8080)
-* **PostgreSQL Database**: Port `5432` dengan volume persisten data otomatis
+* **Frontend**: Buka browser di [http://localhost:5173](http://localhost:5173)
+* **Backend API**: Berjalan di [http://localhost:8088](http://localhost:8088) (dan di-proxy otomatis via frontend di `/api/`)
+* **PostgreSQL Database**: Port `5432` dengan volume data persisten otomatis
 
 Untuk mematikan container:
 ```bash

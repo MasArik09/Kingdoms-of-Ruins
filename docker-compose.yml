@@ -21,6 +21,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: kingdoms-of-ruin-backend:latest
     container_name: kor_backend
     restart: unless-stopped
     depends_on:
@@ -36,6 +37,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: kingdoms-of-ruin-frontend:latest
     container_name: kor_frontend
     restart: unless-stopped
     depends_on:
