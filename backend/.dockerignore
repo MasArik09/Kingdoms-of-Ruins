@@ -1,0 +1,6 @@
+server.exe
+tmp_build.exe
+*.exe
+.git
+.idea
+.vscode

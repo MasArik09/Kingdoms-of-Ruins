@@ -38,7 +38,27 @@ Proyek ini dibangun menggunakan arsitektur modern multi-module yang memisahkan s
 
 ---
 
-## 🚀 Cara Menjalankan Proyek Secara Lokal
+## 🐳 Cara Menjalankan Menggunakan Docker (Rekomendasi)
+
+Cukup pastikan **Docker Desktop** sudah berjalan, lalu jalankan perintah berikut di root folder:
+
+```bash
+docker compose up --build
+```
+
+Layanan yang otomatis berjalan:
+* **Frontend**: Buka browser di [http://localhost:5173](http://localhost:5173) atau [http://localhost](http://localhost)
+* **Backend API**: Berjalan di [http://localhost:8080](http://localhost:8080)
+* **PostgreSQL Database**: Port `5432` dengan volume persisten data otomatis
+
+Untuk mematikan container:
+```bash
+docker compose down
+```
+
+---
+
+## 🚀 Cara Menjalankan Proyek Secara Manual (Lokal Tanpa Docker)
 
 Untuk menjalankan game ini secara lokal, pastikan Anda telah menginstal **Go**, **Node.js/npm**, dan memiliki database **PostgreSQL** yang berjalan.
 
